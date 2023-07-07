@@ -29,7 +29,7 @@ const props = defineProps<{
 	pinned?: boolean;
 }>();
 
-const showContent = $ref(false);
+const showContent = $ref(true);
 </script>
 
 <style lang="scss" module>

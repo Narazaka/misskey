@@ -46,7 +46,7 @@ const props = withDefaults(defineProps<{
 	depth: 1,
 });
 
-let showContent = $ref(false);
+let showContent = $ref(true);
 let replies: misskey.entities.Note[] = $ref([]);
 
 if (props.detail) {

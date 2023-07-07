@@ -168,7 +168,7 @@ export const defaultStore = markRaw(new Storage('base', {
 	},
 	nsfw: {
 		where: 'device',
-		default: 'respect' as 'respect' | 'force' | 'ignore',
+		default: 'ignore' as 'respect' | 'force' | 'ignore',
 	},
 	animation: {
 		where: 'device',
