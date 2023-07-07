@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import type { AntennasRepository } from '@/models/index.js';
 import { AntennaEntityService } from '@/core/entities/AntennaEntityService.js';
 import { DI } from '@/di-symbols.js';
+import { antennaAdminUserId } from './antennaAdminUserId';
 
 export const meta = {
 	tags: ['antennas', 'account'],
@@ -39,7 +41,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> {
 	) {
 		super(meta, paramDef, async (ps, me) => {
 			const antennas = await this.antennasRepository.findBy({
-				userId: me.id,
+				userId: In([me.id, antennaAdminUserId]),
 			});
 
 			return await Promise.all(antennas.map(x => this.antennaEntityService.pack(x)));
