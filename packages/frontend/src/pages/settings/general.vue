@@ -52,8 +52,8 @@
 			</MkSelect>
 
 			<MkSelect v-model="nsfw">
-				<template #label>{{ i18n.ts.nsfw }}</template>
-				<option value="ignore">{{ i18n.ts._nsfw.ignore }}</option>
+				<template #label>{{ i18n.ts.displayOfSensitiveMedia }}</template>
+				<option value="ignore">{{ i18n.ts._displayOfSensitiveMedia.ignore }}</option>
 			</MkSelect>
 
 			<MkRadios v-model="mediaListWithOneImageAppearance">
