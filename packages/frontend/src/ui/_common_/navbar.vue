@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: syuilo and other misskey contributors
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
 <template>
 <div :class="[$style.root, { [$style.iconOnly]: iconOnly }]">
 	<div :class="$style.body">
@@ -53,13 +58,13 @@
 
 <script lang="ts" setup>
 import { computed, defineAsyncComponent, ref, watch } from 'vue';
-import { openInstanceMenu } from './common';
-import * as os from '@/os';
-import { navbarItemDef } from '@/navbar';
-import { $i, openAccountMenu as openAccountMenu_ } from '@/account';
-import { defaultStore } from '@/store';
-import { i18n } from '@/i18n';
-import { instance } from '@/instance';
+import { openInstanceMenu } from './common.js';
+import * as os from '@/os.js';
+import { navbarItemDef } from '@/navbar.js';
+import { $i, openAccountMenu as openAccountMenu_ } from '@/account.js';
+import { defaultStore } from '@/store.js';
+import { i18n } from '@/i18n.js';
+import { instance } from '@/instance.js';
 
 const iconOnly = ref(false);
 
@@ -225,6 +230,7 @@ function more(ev: MouseEvent) {
 		text-align: left;
 		box-sizing: border-box;
 		margin-top: 16px;
+		overflow: clip;
 	}
 
 	.avatar {
@@ -396,6 +402,7 @@ function more(ev: MouseEvent) {
 		display: block;
 		text-align: center;
 		width: 100%;
+		overflow: clip;
 	}
 
 	.avatar {
