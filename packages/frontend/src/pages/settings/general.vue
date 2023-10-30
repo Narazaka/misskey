@@ -69,9 +69,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 			<MkSelect v-model="nsfw">
 				<template #label>{{ i18n.ts.displayOfSensitiveMedia }}</template>
-				<option value="respect">{{ i18n.ts._displayOfSensitiveMedia.respect }}</option>
 				<option value="ignore">{{ i18n.ts._displayOfSensitiveMedia.ignore }}</option>
-				<option value="force">{{ i18n.ts._displayOfSensitiveMedia.force }}</option>
 			</MkSelect>
 
 			<MkRadios v-model="mediaListWithOneImageAppearance">

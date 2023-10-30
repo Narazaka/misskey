@@ -4,11 +4,13 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import type { AntennasRepository } from '@/models/_.js';
 import { AntennaEntityService } from '@/core/entities/AntennaEntityService.js';
 import { DI } from '@/di-symbols.js';
 import { ApiError } from '../../error.js';
+import { antennaAdminUserId } from './antennaAdminUserId.js';
 
 export const meta = {
 	tags: ['antennas', 'account'],
@@ -52,7 +54,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			// Fetch the antenna
 			const antenna = await this.antennasRepository.findOneBy({
 				id: ps.antennaId,
-				userId: me.id,
+				userId: In([me.id, antennaAdminUserId]),
 			});
 
 			if (antenna == null) {
