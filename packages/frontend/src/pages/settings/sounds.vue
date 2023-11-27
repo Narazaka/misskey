@@ -5,6 +5,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div class="_gaps_m">
+	<MkSwitch v-model="notUseSound">
+		<template #label>{{ i18n.ts.notUseSound }}</template>
+	</MkSwitch>
+	<MkSwitch v-model="useSoundOnlyWhenActive">
+		<template #label>{{ i18n.ts.useSoundOnlyWhenActive }}</template>
+	</MkSwitch>
 	<MkRange v-model="masterVolume" :min="0" :max="1" :step="0.05" :textConverter="(v) => `${Math.floor(v * 100)}%`">
 		<template #label>{{ i18n.ts.masterVolume }}</template>
 	</MkRange>
@@ -32,20 +38,24 @@ import MkRange from '@/components/MkRange.vue';
 import MkButton from '@/components/MkButton.vue';
 import FormSection from '@/components/form/section.vue';
 import MkFolder from '@/components/MkFolder.vue';
-import { soundConfigStore } from '@/scripts/sound.js';
 import { i18n } from '@/i18n.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
+import { defaultStore } from '@/store.js';
+import MkSwitch from '@/components/MkSwitch.vue';
 
-const masterVolume = computed(soundConfigStore.makeGetterSetter('sound_masterVolume'));
+const notUseSound = computed(defaultStore.makeGetterSetter('sound_notUseSound'));
+const useSoundOnlyWhenActive = computed(defaultStore.makeGetterSetter('sound_useSoundOnlyWhenActive'));
+const masterVolume = computed(defaultStore.makeGetterSetter('sound_masterVolume'));
 
-const soundsKeys = ['note', 'noteMy', 'notification', 'antenna', 'channel'] as const;
+const soundsKeys = ['note', 'noteMy', 'notification', 'antenna', 'channel', 'reaction'] as const;
 
 const sounds = ref<Record<typeof soundsKeys[number], Ref<any>>>({
-	note: soundConfigStore.reactiveState.sound_note,
-	noteMy: soundConfigStore.reactiveState.sound_noteMy,
-	notification: soundConfigStore.reactiveState.sound_notification,
-	antenna: soundConfigStore.reactiveState.sound_antenna,
-	channel: soundConfigStore.reactiveState.sound_channel,
+	note: defaultStore.reactiveState.sound_note,
+	noteMy: defaultStore.reactiveState.sound_noteMy,
+	notification: defaultStore.reactiveState.sound_notification,
+	antenna: defaultStore.reactiveState.sound_antenna,
+	channel: defaultStore.reactiveState.sound_channel,
+	reaction: defaultStore.reactiveState.sound_reaction,
 });
 
 async function updated(type: keyof typeof sounds.value, sound) {
@@ -54,14 +64,14 @@ async function updated(type: keyof typeof sounds.value, sound) {
 		volume: sound.volume,
 	};
 
-	soundConfigStore.set(`sound_${type}`, v);
+	defaultStore.set(`sound_${type}`, v);
 	sounds.value[type] = v;
 }
 
 function reset() {
 	for (const sound of Object.keys(sounds.value) as Array<keyof typeof sounds.value>) {
-		const v = soundConfigStore.def[`sound_${sound}`].default;
-		soundConfigStore.set(`sound_${sound}`, v);
+		const v = defaultStore.def[`sound_${sound}`].default;
+		defaultStore.set(`sound_${sound}`, v);
 		sounds.value[sound] = v;
 	}
 }

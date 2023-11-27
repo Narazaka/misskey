@@ -547,6 +547,8 @@ export interface Locale {
     "popout": string;
     "volume": string;
     "masterVolume": string;
+    "notUseSound": string;
+    "useSoundOnlyWhenActive": string;
     "details": string;
     "chooseEmoji": string;
     "unableToProcess": string;
@@ -567,6 +569,10 @@ export interface Locale {
     "script": string;
     "disablePagesScript": string;
     "updateRemoteUser": string;
+    "unsetUserAvatar": string;
+    "unsetUserAvatarConfirm": string;
+    "unsetUserBanner": string;
+    "unsetUserBannerConfirm": string;
     "deleteAllFiles": string;
     "deleteAllFilesConfirm": string;
     "removeAllFollowing": string;
@@ -638,6 +644,7 @@ export interface Locale {
     "smtpSecureInfo": string;
     "testEmail": string;
     "wordMute": string;
+    "hardWordMute": string;
     "regexpError": string;
     "regexpErrorDescription": string;
     "instanceMute": string;
@@ -1035,6 +1042,7 @@ export interface Locale {
     "enableChartsForFederatedInstances": string;
     "showClipButtonInNoteFooter": string;
     "reactionsDisplaySize": string;
+    "limitWidthOfReaction": string;
     "noteIdOrUrl": string;
     "video": string;
     "videos": string;
@@ -1157,6 +1165,10 @@ export interface Locale {
     "refreshing": string;
     "pullDownToRefresh": string;
     "disableStreamingTimeline": string;
+    "useGroupedNotifications": string;
+    "signupPendingError": string;
+    "cwNotationRequired": string;
+    "doReaction": string;
     "_announcement": {
         "forExistingUsers": string;
         "forExistingUsersDescription": string;
@@ -1166,6 +1178,10 @@ export interface Locale {
         "tooManyActiveAnnouncementDescription": string;
         "readConfirmTitle": string;
         "readConfirmText": string;
+        "shouldNotBeUsedToPresentPermanentInfo": string;
+        "dialogAnnouncementUxWarn": string;
+        "silence": string;
+        "silenceDescription": string;
     };
     "_initialAccountSetting": {
         "accountCreated": string;
@@ -1179,9 +1195,90 @@ export interface Locale {
         "pushNotificationDescription": string;
         "initialAccountSettingCompleted": string;
         "haveFun": string;
-        "ifYouNeedLearnMore": string;
+        "youCanContinueTutorial": string;
+        "startTutorial": string;
         "skipAreYouSure": string;
         "laterAreYouSure": string;
+    };
+    "_initialTutorial": {
+        "launchTutorial": string;
+        "title": string;
+        "wellDone": string;
+        "skipAreYouSure": string;
+        "_landing": {
+            "title": string;
+            "description": string;
+        };
+        "_note": {
+            "title": string;
+            "description": string;
+            "reply": string;
+            "renote": string;
+            "reaction": string;
+            "menu": string;
+        };
+        "_reaction": {
+            "title": string;
+            "description": string;
+            "letsTryReacting": string;
+            "reactToContinue": string;
+            "reactNotification": string;
+            "reactDone": string;
+        };
+        "_timeline": {
+            "title": string;
+            "description1": string;
+            "home": string;
+            "local": string;
+            "social": string;
+            "global": string;
+            "description2": string;
+            "description3": string;
+        };
+        "_postNote": {
+            "title": string;
+            "description1": string;
+            "_visibility": {
+                "description": string;
+                "public": string;
+                "home": string;
+                "followers": string;
+                "direct": string;
+                "doNotSendConfidencialOnDirect1": string;
+                "doNotSendConfidencialOnDirect2": string;
+                "localOnly": string;
+            };
+            "_cw": {
+                "title": string;
+                "description": string;
+                "_exampleNote": {
+                    "cw": string;
+                    "note": string;
+                };
+                "useCases": string;
+            };
+        };
+        "_howToMakeAttachmentsSensitive": {
+            "title": string;
+            "description": string;
+            "tryThisFile": string;
+            "_exampleNote": {
+                "note": string;
+            };
+            "method": string;
+            "sensitiveSucceeded": string;
+            "doItToContinue": string;
+        };
+        "_done": {
+            "title": string;
+            "description": string;
+        };
+    };
+    "_timelineDescription": {
+        "home": string;
+        "local": string;
+        "social": string;
+        "global": string;
     };
     "_serverRules": {
         "description": string;
@@ -1196,6 +1293,8 @@ export interface Locale {
         "shortName": string;
         "shortNameDescription": string;
         "fanoutTimelineDescription": string;
+        "fanoutTimelineDbFallback": string;
+        "fanoutTimelineDbFallbackDescription": string;
     };
     "_accountMigration": {
         "moveFrom": string;
@@ -1530,6 +1629,10 @@ export interface Locale {
                 "title": string;
                 "description": string;
             };
+            "_tutorialCompleted": {
+                "title": string;
+                "description": string;
+            };
         };
     };
     "_role": {
@@ -1542,7 +1645,9 @@ export interface Locale {
         "assignTarget": string;
         "descriptionOfAssignTarget": string;
         "manual": string;
+        "manualRoles": string;
         "conditional": string;
+        "conditionalRoles": string;
         "condition": string;
         "isConditionalRole": string;
         "isPublic": string;
@@ -1742,6 +1847,7 @@ export interface Locale {
         "notesCount": string;
         "nameAndDescription": string;
         "nameOnly": string;
+        "allowRenoteToExternal": string;
     };
     "_menuDisplay": {
         "sideFull": string;
@@ -1839,6 +1945,7 @@ export interface Locale {
         "notification": string;
         "antenna": string;
         "channel": string;
+        "reaction": string;
     };
     "_ago": {
         "future": string;
@@ -1852,22 +1959,20 @@ export interface Locale {
         "yearsAgo": string;
         "invalid": string;
     };
+    "_timeIn": {
+        "seconds": string;
+        "minutes": string;
+        "hours": string;
+        "days": string;
+        "weeks": string;
+        "months": string;
+        "years": string;
+    };
     "_time": {
         "second": string;
         "minute": string;
         "hour": string;
         "day": string;
-    };
-    "_timelineTutorial": {
-        "title": string;
-        "step1_1": string;
-        "step1_2": string;
-        "step2_1": string;
-        "step2_2": string;
-        "step3_1": string;
-        "step3_2": string;
-        "step4_1": string;
-        "step4_2": string;
     };
     "_2fa": {
         "alreadyRegistered": string;
@@ -2200,6 +2305,9 @@ export interface Locale {
         "checkNotificationBehavior": string;
         "sendTestNotification": string;
         "notificationWillBeDisplayedLikeThis": string;
+        "reactedBySomeUsers": string;
+        "renotedBySomeUsers": string;
+        "followedBySomeUsers": string;
         "_types": {
             "all": string;
             "note": string;
@@ -2316,6 +2424,8 @@ export interface Locale {
         "createAvatarDecoration": string;
         "updateAvatarDecoration": string;
         "deleteAvatarDecoration": string;
+        "unsetUserAvatar": string;
+        "unsetUserBanner": string;
     };
     "_fileViewer": {
         "title": string;
