@@ -5,6 +5,7 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import * as Redis from 'ioredis';
+import { In } from 'typeorm';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import type { NotesRepository, AntennasRepository } from '@/models/_.js';
 import { QueryService } from '@/core/QueryService.js';
@@ -15,6 +16,7 @@ import { IdService } from '@/core/IdService.js';
 import { FanoutTimelineService } from '@/core/FanoutTimelineService.js';
 import { GlobalEventService } from '@/core/GlobalEventService.js';
 import { ApiError } from '../../error.js';
+import { antennaAdminUserId } from './antennaAdminUserId.js';
 
 export const meta = {
 	tags: ['antennas', 'account', 'notes'],
@@ -80,7 +82,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			const antenna = await this.antennasRepository.findOneBy({
 				id: ps.antennaId,
-				userId: me.id,
+				userId: In([me.id, antennaAdminUserId]),
 			});
 
 			if (antenna == null) {

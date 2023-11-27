@@ -33,7 +33,7 @@ const props = defineProps<{
 	note: Misskey.entities.Note;
 }>();
 
-const showContent = $ref(false);
+const showContent = $ref(true);
 </script>
 
 <style lang="scss" module>
