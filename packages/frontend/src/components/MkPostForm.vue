@@ -182,7 +182,6 @@ const poll = ref<{
 	expiredAfter: string | null;
 } | null>(null);
 const useCw = ref<boolean>(true);
-useCw = true;
 const showPreview = ref(defaultStore.state.showPreview);
 watch(showPreview, () => defaultStore.set('showPreview', showPreview.value));
 const showAddMfmFunction = ref(defaultStore.state.enableQuickAddMfmFunction);
@@ -957,7 +956,7 @@ onMounted(() => {
 			text.value = init.text ? init.text : '';
 			files.value = init.files;
 			cw.value = init.cw;
-			useCw.value = init.cw != null;
+			useCw.value = true;
 			if (init.poll) {
 				poll.value = {
 					choices: init.poll.choices.map(x => x.text),
