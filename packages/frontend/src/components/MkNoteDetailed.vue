@@ -270,7 +270,7 @@ const reactButton = shallowRef<HTMLElement>();
 const clipButton = shallowRef<HTMLElement>();
 const appearNote = computed(() => isRenote ? note.value.renote as Misskey.entities.Note : note.value);
 const isMyRenote = $i && ($i.id === note.value.userId);
-const showContent = ref(false);
+const showContent = ref(true);
 const isDeleted = ref(false);
 const muted = ref($i ? checkWordMute(appearNote.value, $i, $i.mutedWords) : false);
 const translation = ref<Misskey.entities.NotesTranslateResponse | null>(null);

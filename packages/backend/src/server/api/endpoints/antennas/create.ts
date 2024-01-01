@@ -12,6 +12,7 @@ import { AntennaEntityService } from '@/core/entities/AntennaEntityService.js';
 import { DI } from '@/di-symbols.js';
 import { RoleService } from '@/core/RoleService.js';
 import { ApiError } from '../../error.js';
+import { antennaAdminUserId } from './antennaAdminUserId.js';
 
 export const meta = {
 	tags: ['antennas'],
@@ -86,8 +87,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		private globalEventService: GlobalEventService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
-			if (ps.keywords.flat().every(x => x === '') && ps.excludeKeywords.flat().every(x => x === '')) {
-				throw new Error('either keywords or excludeKeywords is required.');
+			if (me.id !== antennaAdminUserId) {
+        if (ps.keywords.flat().every(x => x === '') && ps.excludeKeywords.flat().every(x => x === '')) {
+          throw new Error('either keywords or excludeKeywords is required.');
+				}
 			}
 
 			const currentAntennasCount = await this.antennasRepository.countBy({

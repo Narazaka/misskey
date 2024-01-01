@@ -242,7 +242,7 @@ const reactButton = shallowRef<HTMLElement>();
 const clipButton = shallowRef<HTMLElement>();
 const appearNote = computed(() => isRenote ? note.value.renote as Misskey.entities.Note : note.value);
 const isMyRenote = $i && ($i.id === note.value.userId);
-const showContent = ref(false);
+const showContent = ref(true);
 const parsed = computed(() => appearNote.value.text ? mfm.parse(appearNote.value.text) : null);
 const urls = computed(() => parsed.value ? extractUrlFromMfm(parsed.value) : null);
 const isLong = shouldCollapsed(appearNote.value, urls.value ?? []);
