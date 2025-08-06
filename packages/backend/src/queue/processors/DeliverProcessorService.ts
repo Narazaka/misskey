@@ -71,11 +71,25 @@ export class DeliverProcessorService {
 			return 'skip (suspended)';
 		}
 
+		const i = await (this.meta.enableStatsForFederatedInstances
+			? this.federatedInstanceService.fetchOrRegister(host)
+			: this.federatedInstanceService.fetch(host));
+
+		// suspend server by software
+		if (i != null && this.utilityService.isDeliverSuspendedSoftware(i)) {
+			return 'skip (software suspended)';
+		}
+
 		try {
 			await this.apRequestService.signedPost(job.data.user, job.data.to, job.data.content, job.data.digest);
 
-			// Update stats
-			this.federatedInstanceService.fetch(host).then(i => {
+			this.apRequestChart.deliverSucc();
+			this.federationChart.deliverd(host, true);
+
+			// Update instance stats
+			process.nextTick(async () => {
+				if (i == null) return;
+
 				if (i.isNotResponding) {
 					this.federatedInstanceService.update(i.id, {
 						isNotResponding: false,
@@ -83,9 +97,9 @@ export class DeliverProcessorService {
 					});
 				}
 
-				this.fetchInstanceMetadataService.fetchInstanceMetadata(i);
-				this.apRequestChart.deliverSucc();
-				this.federationChart.deliverd(i.host, true);
+				if (this.meta.enableStatsForFederatedInstances) {
+					this.fetchInstanceMetadataService.fetchInstanceMetadata(i);
+				}
 
 				if (this.meta.enableChartsForFederatedInstances) {
 					this.instanceChart.requestSent(i.host, true);
@@ -94,8 +108,11 @@ export class DeliverProcessorService {
 
 			return 'Success';
 		} catch (res) {
-			// Update stats
-			this.federatedInstanceService.fetch(host).then(i => {
+			this.apRequestChart.deliverFail();
+			this.federationChart.deliverd(host, false);
+
+			// Update instance stats
+			this.federatedInstanceService.fetchOrRegister(host).then(i => {
 				if (!i.isNotResponding) {
 					this.federatedInstanceService.update(i.id, {
 						isNotResponding: true,
@@ -116,9 +133,6 @@ export class DeliverProcessorService {
 					});
 				}
 
-				this.apRequestChart.deliverFail();
-				this.federationChart.deliverd(i.host, false);
-
 				if (this.meta.enableChartsForFederatedInstances) {
 					this.instanceChart.requestSent(i.host, false);
 				}
@@ -129,7 +143,7 @@ export class DeliverProcessorService {
 				if (!res.isRetryable) {
 					// 相手が閉鎖していることを明示しているため、配送停止する
 					if (job.data.isSharedInbox && res.statusCode === 410) {
-						this.federatedInstanceService.fetch(host).then(i => {
+						this.federatedInstanceService.fetchOrRegister(host).then(i => {
 							this.federatedInstanceService.update(i.id, {
 								suspensionState: 'goneSuspended',
 							});

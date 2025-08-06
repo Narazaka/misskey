@@ -24,12 +24,17 @@ type NonNullableRecord<T> = {
 type AllNullRecord<T> = {
 	[P in keyof T]: null;
 };
+type AllNullOrOptionalRecord<T> = {
+	[P in keyof T]: never;
+};
 
 export type PureRenote =
 	Omit<Note, 'renote' | 'renoteId' | 'reply' | 'replyId' | 'text' | 'cw' | 'files' | 'fileIds' | 'poll'>
-	& AllNullRecord<Pick<Note, 'reply' | 'replyId' | 'text' | 'cw' | 'poll'>>
+	& AllNullRecord<Pick<Note, 'text'>>
+	& AllNullOrOptionalRecord<Pick<Note, 'reply' | 'replyId' | 'cw' | 'poll'>>
 	& { files: []; fileIds: []; }
-	& NonNullableRecord<Pick<Note, 'renote' | 'renoteId'>>;
+	& NonNullableRecord<Pick<Note, 'renoteId'>>
+	& Pick<Note, 'renote'>; // リノート対象が削除された場合、renoteIdはあるがrenoteはnullになる
 
 export type PageEvent = {
 	pageId: Page['id'];
@@ -195,6 +200,9 @@ export type ModerationLog = {
 } | {
 	type: 'deleteGalleryPost';
 	info: ModerationLogPayloads['deleteGalleryPost'];
+} | {
+	type: 'deleteChatRoom';
+	info: ModerationLogPayloads['deleteChatRoom'];
 });
 
 export type ServerStats = {
@@ -258,11 +266,11 @@ export type SignupRequest = {
 	'g-recaptcha-response'?: string | null;
 	'turnstile-response'?: string | null;
 	'm-captcha-response'?: string | null;
-}
+};
 
 export type SignupResponse = MeDetailed & {
 	token: string;
-}
+};
 
 export type SignupPendingRequest = {
 	code: string;
@@ -308,9 +316,9 @@ export type SigninWithPasskeyInitResponse = {
 };
 
 export type SigninWithPasskeyResponse = {
-	signinResponse: SigninFlowResponse;
+	signinResponse: SigninFlowResponse & { finished: true };
 };
 
 type Values<T extends Record<PropertyKey, unknown>> = T[keyof T];
 
-export type PartialRolePolicyOverride = Partial<{[k in keyof RolePolicies]: Omit<Values<Role['policies']>, 'value'> & { value: RolePolicies[k] }}>;
+export type PartialRolePolicyOverride = Partial<{ [k in keyof RolePolicies]: Omit<Values<Role['policies']>, 'value'> & { value: RolePolicies[k] } }>;

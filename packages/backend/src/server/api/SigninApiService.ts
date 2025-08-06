@@ -71,6 +71,7 @@ export class SigninApiService {
 				'g-recaptcha-response'?: string;
 				'turnstile-response'?: string;
 				'm-captcha-response'?: string;
+				'testcaptcha-response'?: string;
 			};
 		}>,
 		reply: FastifyReply,
@@ -88,10 +89,9 @@ export class SigninApiService {
 			return { error };
 		}
 
-		try {
 		// not more than 1 attempt per second and not more than 10 attempts per hour
-			await this.rateLimiterService.limit({ key: 'signin', duration: 60 * 60 * 1000, max: 10, minInterval: 1000 }, getIpHash(request.ip));
-		} catch (err) {
+		const rateLimit = await this.rateLimiterService.limit({ key: 'signin', duration: 60 * 60 * 1000, max: 10, minInterval: 1000 }, getIpHash(request.ip));
+		if (rateLimit != null) {
 			reply.code(429);
 			return {
 				error: {
@@ -191,6 +191,12 @@ export class SigninApiService {
 
 				if (this.meta.enableTurnstile && this.meta.turnstileSecretKey) {
 					await this.captchaService.verifyTurnstile(this.meta.turnstileSecretKey, body['turnstile-response']).catch(err => {
+						throw new FastifyReplyError(400, err);
+					});
+				}
+
+				if (this.meta.enableTestcaptcha) {
+					await this.captchaService.verifyTestcaptcha(body['testcaptcha-response']).catch(err => {
 						throw new FastifyReplyError(400, err);
 					});
 				}

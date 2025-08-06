@@ -67,6 +67,7 @@ export class SignupApiService {
 				'g-recaptcha-response'?: string;
 				'turnstile-response'?: string;
 				'm-captcha-response'?: string;
+				'testcaptcha-response'?: string;
 			}
 		}>,
 		reply: FastifyReply,
@@ -99,6 +100,12 @@ export class SignupApiService {
 					throw new FastifyReplyError(400, err);
 				});
 			}
+
+			if (this.meta.enableTestcaptcha) {
+				await this.captchaService.verifyTestcaptcha(body['testcaptcha-response']).catch(err => {
+					throw new FastifyReplyError(400, err);
+				});
+			}
 		}
 
 		const username = body['username'];
@@ -122,7 +129,8 @@ export class SignupApiService {
 
 		let ticket: MiRegistrationTicket | null = null;
 
-		if (this.meta.disableRegistration) {
+		// テスト時はこの機構は障害となるため無効にする
+		if (process.env.NODE_ENV !== 'test' && this.meta.disableRegistration) {
 			if (invitationCode == null || typeof invitationCode !== 'string') {
 				reply.code(400);
 				return;
