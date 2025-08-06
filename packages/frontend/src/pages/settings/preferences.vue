@@ -287,9 +287,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 								<MkPreferenceContainer k="nsfw">
 									<MkSelect v-model="nsfw">
 										<template #label><SearchLabel>{{ i18n.ts.displayOfSensitiveMedia }}</SearchLabel></template>
-										<option value="respect">{{ i18n.ts._displayOfSensitiveMedia.respect }}</option>
 										<option value="ignore">{{ i18n.ts._displayOfSensitiveMedia.ignore }}</option>
-										<option value="force">{{ i18n.ts._displayOfSensitiveMedia.force }}</option>
 									</MkSelect>
 								</MkPreferenceContainer>
 							</SearchMarker>
