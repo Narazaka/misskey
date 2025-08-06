@@ -283,7 +283,6 @@ const canPost = computed((): boolean => {
 	return !props.mock && !posting.value && !posted.value && !uploader.uploading.value && (uploader.items.value.length === 0 || uploader.readyForUpload.value) &&
 		(
 			1 <= textLength.value ||
-			(useCw.value && 1 <= cwTextLength.value) ||
 			1 <= files.value.length ||
 			1 <= uploader.items.value.length ||
 			poll.value != null ||
@@ -294,7 +293,6 @@ const canPost = computed((): boolean => {
 		(
 			useCw.value ?
 				(
-					cw.value != null && cw.value.trim() !== '' &&
 					cwTextLength.value <= maxCwTextLength
 				) : true
 		) &&
