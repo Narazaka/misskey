@@ -33,7 +33,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<XNotification v-else :class="$style.content" :notification="notification" :withTime="true" :full="true"/>
 			</div>
 		</component>
-		<button v-show="paginator.canFetchOlder.value" key="_more_" :disabled="paginator.fetchingOlder.value" class="_button" :class="$style.more" @click="paginator.fetchOlder">
+		<button v-show="paginator.canFetchOlder.value" key="_more_" v-appear="prefer.s.enableInfiniteScroll ? paginator.fetchOlder : null" :disabled="paginator.fetchingOlder.value" class="_button" :class="$style.more" @click="paginator.fetchOlder">
 			<div v-if="!paginator.fetchingOlder.value">{{ i18n.ts.loadMore }}</div>
 			<MkLoading v-else/>
 		</button>
@@ -44,10 +44,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 <script lang="ts" setup>
 import { onUnmounted, onMounted, computed, useTemplateRef, TransitionGroup, markRaw, watch } from 'vue';
 import * as Misskey from 'misskey-js';
+import { notificationTypes } from 'misskey-js';
 import { useInterval } from '@@/js/use-interval.js';
 import { useDocumentVisibility } from '@@/js/use-document-visibility.js';
 import { getScrollContainer, scrollToTop } from '@@/js/scroll.js';
-import type { notificationTypes } from '@@/js/const.js';
 import XNotification from '@/components/MkNotification.vue';
 import MkNote from '@/components/MkNote.vue';
 import { useStream } from '@/stream.js';
@@ -59,7 +59,7 @@ import { isSeparatorNeeded, getSeparatorInfo } from '@/utility/timeline-date-sep
 import { Paginator } from '@/utility/paginator.js';
 
 const props = defineProps<{
-	excludeTypes?: typeof notificationTypes[number][];
+	excludeTypes?: typeof notificationTypes[number][] | null;
 }>();
 
 const rootEl = useTemplateRef('rootEl');
@@ -137,8 +137,8 @@ watch(visibility, () => {
 	}
 });
 
-function onNotification(notification) {
-	const isMuted = props.excludeTypes ? props.excludeTypes.includes(notification.type) : false;
+function onNotification(notification: Misskey.entities.Notification) {
+	const isMuted = props.excludeTypes ? props.excludeTypes.includes(notification.type as typeof notificationTypes[number]) : false;
 	if (isMuted || window.document.visibilityState === 'visible') {
 		if (store.s.realtimeMode) {
 			useStream().send('readNotification');
@@ -178,6 +178,9 @@ onMounted(() => {
 
 onUnmounted(() => {
 	if (connection) connection.dispose();
+	if (scrollContainer != null) {
+		scrollContainer.removeEventListener('scroll', onScrollContainerScroll);
+	}
 });
 
 defineExpose({
